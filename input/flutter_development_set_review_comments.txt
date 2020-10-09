@@ -1,0 +1,200 @@
+Ah I see, it only resolve when  delta_time > expectedIdlePeriod and the timer/microtask caches are empty. That is a bit weird though, shouldn't we resolve the future as soon as timer/microtask caches are empty? why do we still want to wait in this case. I was imagining this kind of logic  if (delta_time > expectedIdlePeriod || caches are empty) resolveFuturesCompleter.complete(); else continue;
+so you're saying an app can't use a plugin with a higher minimum ios version?
+Could we throw if ` call.arguments` isn't a `Map`?
+This is from the original snackbar API.
+```suggestion              testUsingContext('Version.json info is correct',(){ ```
+Why is this the condition for saving? What if I have my form an an Alert box or something like that?
+Added a few more context. Please let me know if that looks good.
+Hitting real artifacts, failing if they did not exist
+Could we also make this a unique file?
+No, it will throw a tool exit if `throwOnError` is true (which it is by default)
+nit: return not needed.
+Done
+I think it's not worth it right now, but that would be a good plan if we notice that there's a problem with the change in this PR.
+```suggestion           args[1]['action'] as String,           args[1]['data'] as Map<String, dynamic>,         ); ```
+nit: this seems to be equivalent to  ```suggestion       _gestureType = _getGestureType(details); ```
+origin 2-space indent was OK?
+nit: I couldn't find the definition of "main axes". Maybe "horizontal axis or vertical axis"?
+Understood.
+OK, sounds good, added a comment.
+this ! should become unnecessary when you update to tip of tree
+No, but it does need an ignore on dead code:  https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/painting/text_span.dart#L372  
+instead of catching the exception, use:  `expect(() => .., throwsToolExit(message: ...)`
+we could wrap this body in an assert to prevent people from depending on it in release builds (just have it always return false or something)
+Fixed. Move the RangeSlider test case to another file.
+I took a look at the ink widget, and couldn't figure out how to apply it here. If i understand correctly, the Ink widget just make the splash go through the decoration of the Ink. but there is a stack on top of the material widget
+Could you use `default` to handle `constrainedAxis == null` and then just do everything in the switch statement?
+This test is new.
+nit: add a trailing comma to the end of this line
+I think we should move this logic to our default `DeserializeFinderFactory`, and make it `@mustCallSuper`.
+how much trouble do we get in if all these are non-nullable?
+I don't see any risk of that but since we are cherry picking this, let's make it as simple as possible. We can always update the sdk version later. WDYT?
+Can we also change this method to send "commit/cancel" information as an argument to make it similar to the other methods?
+Ugh, forgot I changed this before landing last week. We originally threw a `StateError` [here](https://github.com/dart-lang/sdk/blob/master/pkg/dds/lib/src/dds_impl.dart#L32) but past me thought that wasn't a good idea and changed it.
+How come this works here and not for add-to-app? Because our template build phase puts xcode_backend.sh later than where cocoapods can help us put it?
+serials -> series
+```suggestion          autoValidateMode: autovalidate              ? AutoValidateMode.always              : (autoValidateMode ?? AutoValidateMode.disabled), ```
+Well this one is a bug I didn't notice. 
+@jonahwilliams ah! it's because you didn't use a raw string!
+addd -> added ?
+FWIW, I would lean towards moving from `dynamic` to `Object?` everywhere rather than the other way around, but that's something we can worry about in another PR.
+This `assert` doesn't take into consideration for multiple input events at the same time. This often happen for `PointerAddedEvent` and `PointerDownEvent`. 
+is the code that generates this string also removed?
+This is awesome. Your PR LGTM.  My only question is if there is an official documented procedure for rolling the gallery here, and if it can be updated to reference this file.
+Why not use a `String` directly?
+Same here.
+Removed the sync call because for processes async is better, and it was only used once
+@hansmuller just astutely noticed the Align-ment (😆 ) here is off. Can you fix this nit before we merge?  ```suggestion        assert(widthFactor == null || widthFactor >= 0.0),        assert(heightFactor == null || heightFactor >= 0.0), ```
+Couldn't you leave `_mouseTracker.schedulePostFrameCheck()`, and just replace the body of that function with the contents of this one?  I.e., doesn't this code belong in the mouse tracker, and not the binding?
+Doesn't casting it to `Object` (as opposed to `Object?`) imply the `!`?
+Makes sense to me
+extra space
+```suggestion        autoValidateMode = autovalidate            ? AutoValidateMode.always            : (autoValidateMode ?? AutoValidateMode.disabled), ```
+nit: I believe we use `*` instead of `-` throughout the code base for enumerations. 
+Ah, you are right. I'll add a test for this and fix it.
+nit: maybe mentioned what "handled" (or returning true) means, e.g. that the event will stop propagating and nobody else will see them?
+could we add a new suite in `test/services/platform_view_test.dart` that uses the new controller?  We could start by duplicating the existing tests and covering any change in behavior between the two controllers.
+haha, actually, it appeared 238 times in total, and indeed most of them called `setState`. I will fix it.
+Doesn't indicate the current text insertion point? Here and elsewhere.
+This change is required to make the integration test added pass
+What do you mean by "time statistic results"?
+Added test case for missed null android sdk case for diagnostics
+done
+This was not a nit at all, thanks for pointing it out :)
+Seems reasonable!
+Do you mind if I do the template changes and the html parsing in a separate PR? I want to keep the PRs small and easy to review.
+nit: per the style guide, the order of the constructor arguments and the order of the properties should be the same.  We should make that order make sense when reading the code (e.g. routeInformationProvider and routeInformationParser should always be together).
+great! I think this will be a really useful debugging feature.
+```suggestion       // State for all pointers which are currently down.       //       // The `hitTestHistory` is equivalent to `GestureBinding._hitTests`, which is important for       // `_handlePointerEvent` to replicate `GestureBinding._handlePointerEvent`. ``` Explain the property so that readers can understand without referring to another file.
+But you can't use _CastError in your code anyways. I'd assume if you read the doc you are wondering what error type you're supposed to catch in a try-catch - and that would be a TypeError, no?
+pretty sure every time you ask that question, the answer is yes
+This has been in there for .. a while now.  Basically, we try to use the $CONFIGURATION because that's probably what the user wants if they're running from Xcode (in particular, we don't want instruments tests from debug mode Dart, and we set up instruments to run in a "PROFILE" configuration by default).  But we do let a user override it if necessary.
+Can we avoid referring to this (and having developers refer to it) using dart:ui?
+All of the createTestCommandRunner tests hit the context due to FlutterCommand. I started refactoring things out, but I got stuck on output preferences and rolled it back a while ago
+cc @goderbauer any idea if any of our (non-test) customers (e.g. google3 or fuchsia) use Draggable without data?
+Or is that inferred by the tool? 
+It returns null not "null", right?
+I think the current one is more readable (but I removed the local var and make it a bang).
+This assert is a little odd. Why do we assert after removing that there's still something in _transforms? Shouldn't we assert before?
+If it's the same API as pushReplacementNamed, does it need to be different?
+sorry it is a typo, i meant the remote editing value. The formatAndSetValue also called _updateRemoteEditingValueIfNeeded https://github.com/flutter/flutter/blob/9e315985d0788ee04df48559896be46225ecf2f5/packages/flutter/lib/src/widgets/editable_text.dart#L1804  This will attempt to sync the current editing value to the embedding. I was wondering if selection only change needs to be sync to the embedding as well.
+Thanks for the examples!
+Yeah, let's only mention the `label` here.
+Done, as discussed offline with the minor tweak of returning `null` by default.
+Yes if its sortable. I can add that.
+How about: ```dart static bool deleteIfExists(FileSystemEntity entity, ...) { ... } ```  Then it can handle directories and links as well.
+This may be nit picking, but what if the _hasInteractedByUser is set to true due to one field has change, and later on the field get reseted? I believe the form will still autovalidating in this case. This may be an ok behavior, but we should mention it in the documentation.
+`--platforms=android`?
+It is not the type of keyboard, but rather the mark inserted is based on the directionality of the immediately previous run of text. This ensures the whitespace is treated as part of the same directionality run instead of defaulting to the underlying direction of the field.
+Also, there's an extra space on L246 but the three `=`'s are not aligned.  
+If the extension method applies to any implementation of `File`, then we need test coverage of how it applies to them.
+indentation
+Ahh, cool I didn't know it did that :) 
+I think we could still leave this as APK right? Or is this code hit for iOS as well?
+Good catch. I forgot to delete L44 during refactor.
+Given the time constraints and the downside of getting this wrong, this seems like a reasonable compromise in the short term. We can always circle back later if the feedback is negative
+Thanks @dnfield!
+seems like we could rename this to posix exception, et cetera
+Done
+Why does `RouteInformation` need to have an opinion at all whether and how its serializable? Isn't that up to the implementation of `RouteInformationParser` to decide how to send it over?
+> pumpAndSettle is the same by the way. We recommend that people test the number of frames pumped returned by pumpAndSettle() to make sure they got the right number of frames but in reality, no one does that. It is very difficult to maintain and it can change easily by your dependencies.  pumpAndSettle really only makes sense to test your own widget, it doesn't make much sense when testing something where you don't know how many frames are going to run. In general, app logic shouldn't be triggered on frames, so when testing app logic you shouldn't need to wait for things to settle. Just pump a frame to start animations, and pump a frame with a delay sufficiently later that all the animations are done.
+When would both `date != oldWidget.date` and `utils.isSameDay(date, oldWIdge.date)` both be true?
+... and O(N) _for_ removing ...
+Is that acceptable? I thought that is not a good design pattern. Do we have example in our code base that does it?
+Done
+@fkorotkov we're ready when you are :)
+I wonder if the caret metrics cache should just be invalidated whenever the text painter has to relayout and its width cache misses?
+This test is good. A test that you get a tool exit for the operations that `_validateReadPermissions` is also needed.
+Nit: compute `frameBuildTimeMicros ` in the constructor and make `averageFrameBuildTime ` and so on as public `get` functions so it would be easy for `FrameTimingSummarizer` users to get only a subset of stats in the future.
+I'm expecting throw will happen at `element(finder)`. See my added fail test case.
+```suggestion   /// The background color of the heading row. ```
+Most of these methods do not need to be async - this made it much easier to fix the disabled test
+@blasten This can be it's own class or we can add `pointTransformer` field to the `PlatformViewController` class. Then Android could just use `PlatformViewSurface`. What are your thoughts on this? 
+done
+Ahh, yeah - I think I was remembering it backwards
+Done
+That's a really good point.  I'm trying to think of a way we could capture both of these:  - A list of small images that together add up to a lot (e.g. a list of even small images that could still be half the size they actually are). - A single large image that, while a small percentage, still adds up to a lot (e.g. a 12MP camera image rendered even at device resolution)  We could add two properties, but that seems harder to manage and reason about to me. We could also probably track the images in a static map, and then check that the whole map doesn't exceed the maximum allowable KB.
+This will change everything, not just desktop; is that desired?
+Thanks for pointing that out. I've updated it by removing line 78. Please let me know if it looks good!
+Sorry for late response. I tried to fix, please check them out!
+Woo!
+Don't really care what it says since that seems like a moving target, just that it exists.
+Why is this needed? Wouldn't it be null to start with?
+`moveEventCount` might be clearer than `intervalCount`.
+Correct. This needs be added to `index.html` like this: ```html <base href="/base/path/"> ``` I think we should also change the html template to include the `<base>` tag commented out with an explanation: ```html <!--   Uncomment the following line if you are serving your web app in a path other   than the root.    Fore more details:   * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base --> <!-- <base href="/foo/"> --> ```  I like the idea of parsing it automatically from the html file. But when do we parse it?  If we do it at server startup, the user could change their index.html file while the server is running. They have to kill and start their server again (not ideal).  Should we parse it every time we receive a request? I think this might work but will lead to slower responses.  Maybe do it at build time and re-parse on hot restart? This is different from today's behavior where changes in `index.html` don't require a hot restart.
+nit: can you add line breaks to the sentence to keep the number of characeters under 80 per line.
+Should be required, assert non-null.
+As we've discussed earlier today, this probably goes to the E2E package.
+Should the whole grid be colored for focus vs just applying the color to the focused day?
+It was lazy before - I think there was a misunderstanding around what `late` means. If assigning immediately it has no meaning @stereotype441 should we have a lint for this?  To restore the lazy behavior that existed before this would have to be a nullable field type, and you would have to restore the old logic.
+Done.
+I think OutlinedButton padding should follow ContainedButtons (16 not 8)
+Done
+maybe mention that restorationId can be null but this disables restoration.  or have a separate constructor for disabling restoration, and make this one require non-null.
+Done
+As above... It's complicated.
+How about: `'Identifier number for a user or work profile on Android only. Run "adb shell pm list users" for available identifiers.'`  What are our criteria for hiding options?  This one may be uncommonly used, but it's not like experimental or only relevant for Flutter or g3 development (like local engine flags, etc).
+why does the order of the keys in the output map matter?
+I had state-management libraries in mind – which will have to implement a way to interact with the restoration API outside of a `State`/the widget tree.  Provider will definitely want to expose a way for users to define restorable properties, where they would define both the ID and the property from outside a `State`.  It may not be too bad, as we can use `Map<Id, Property>` instead of a tuple. I need to play around it.
+I'm not sure why the SDK's not sending a `_TypeError`, as that is defined similarly:  ```dart class _TypeError extends Error implements TypeError, CastError { /* ... */ } ```
+That does look wrong. Wanna send a PR to fix it?
+Also, "assert" in the name makes it sound like this should only be used in asserts?
+I suppose if this were accidentally removed, the devicelab tests would already be failing.
+That's what I was referring in https://discord.com/channels/608014603317936148/684483384839503894/755100965811519627: > it looks like all properties (primaryColor, primaryContrastingColor, textTheme...) could be non-nullable BUT CupertinoThemeData.noDefault() makes that impossible  Basically material currently relays on the nullability of those properties to work (see https://github.com/flutter/flutter/blob/d26268bb9e6d713a73d6148da7fa75936d442741/packages/flutter/lib/src/material/theme_data.dart#L1764-L1774) by using [_NoDefaultCupertinoThemeData](https://github.com/flutter/flutter/blob/d26268bb9e6d713a73d6148da7fa75936d442741/packages/flutter/lib/src/cupertino/theme.dart) that seems to be the only place where the properties can be null.  I thought it could be possible to refactor the code to make those properties non-nullable but I haven't manage to make it work :-(  So is there something I have to do in this PR regarding this comment thread?
+need to check the assetPath != path, otherwise the tool recognizes `assets: - foo.txt` as its own asset variant.
+More bike-shedding: maybe EnabledAndDisabledMouseCursor?
+Cleaned-up that suggestion and posted it as a PR here: https://github.com/flutter/flutter/pull/66274
+Updated to add test case for org-dartlang-app URI and to expect file URIs
+done
+The purpose of additional time is to increase the timeout value for the test section, I think we should not overload its usage. As of the current implementation it both increases the wait time for the timer/microtask and also extends the timeout.  It also raise another question, what if there are unresolved futures that user does not care about? currently it will always fail if there are unresolved futures after the additionalTime.  How about we expose a new api, something like `tester.resolveTimerAndMicrotask()`. this api create a periodic timer just like you do here, but the sideEffectCompleter will only resolve when there are no more timercache and microtasks. In the test, the developer can decide if they want to wait for the future by calling `await tester.resolveTimerAndMicrotask()`. If they have a bad test that creating unresolved timer or microtask, it will just hang.  We don't do any waiting at the runAsync tear down, it will be developers choices to decide what they want to do.
+My thinking is that those are two separate responsibilities: When I get handed a bucket, I can store all the data I want in it. It is, however, not my concern to decide how/where the data is persisted. That's the responsibility of whoever owns the bucket and provided it to me. They need to make sure that it is hooked up to a manager.  Not requiring a manager also has the advantage that we can unhook a subtree. For example, when a widget is in the way of transitioning out in an animation, we no longer need to persist its state (in the state we've already recorded that it is gone). We can then just unhook the bucket.
+Update to take a bool. Let me update the engine PR.
+Sadly not. `WidgetTester` calls the `handlePointerEvent` with source but `WidgetTester.binding` is of type `TestWidgetFlutterBinding`, despite its concrete type being `LiveTestWidgetsFlutterBinding`.
+`{}` means named arguments, and optional if not marked as `@required`, with default value if not assigned `null`. Here I don't think they should be optional. I added all `@required`. 
+This sentence isn't complete.
+See snippet just below this (291-302). The comments here have removed references to kToolbarHeight, but it is still in the sample, can you update the snippet to reflect a custom value?
+This seems odd...
+done
+Is `ShrinkWrappingViewport` need `clipBehavior`?
+Maybe comment where this is coming from or force the paragraph to actually use this size.
+we'll validate that it doesn't exist and fail :) 
+The `collapsedHeight` is actually ignored when `pinned` and `floating` are true and `bottom` is set. See line 1330 in `app_bart.dart`.  But I should respect it, and default it to `0.0` if `collapsedHeight` is not set. I'll do another revision for this, it will require me to update the `toolbarOpacity` calculation though.
+doesn't have to be here, but from looking at this code it looks like we could replace this with a mock.
+same.
+Yeah, I'm also worried that adding logic to retain Windows line endings would tickle the Cirrus problem.
+nit: fix indentation
+I think because they are doing updates to the site currently, so maybe sometimes things don't work correctly
+I read your comment below. I'll change that test so it reflects the new error messages.
+nit: please make sure these are sorted alphabetically
+Same comment as ContainedButton's test, could put this into an inner function to avoid duplicating
+This is why I put question marks at the end of all my statements, I never get this right the first try.
+you can add a negative test here to say it doesn't find any mentions of 'Unable to locate Android SDK' here since we did provide a valid MockAndroidSdk to the AndroidValidator. 
+project -> plugin?  > The project will not compile until you add platforms implementation.  This isn't quite true, it just isn't useful
+this was a shellcheck error, not sure if this ever did what it was supposed to.
+Not sure I understood this comment
+use only one line of whitespace here instead of 2.
+`toggleDebugBanner` should maybe be `setDebugBanner` and accept a bool arg to turn it back on, too.
+```suggestion       issueCount: errorCount,       seconds: seconds,       undocumentedMembers: undocumentedMembers,       dartDocMessage: dartDocMessage,     );  ```
+I'd prefer it if we reserved `=>` for one-liners that returned a value (not void). Here and elsewhere.
+This worked!! Thank you for spotting that. Very tricky. 
+Actually this is null on web plateform and is the cause of #62724.
+Will this test pass on release branches?
+This was also disable in flutter_web_runner, right?
+```suggestion     // Test TextField's cursor & selection color. ```
+Is the value just based on [MediaQuery.viewPadding] or is it the same as viewPadding?
+Ditto.
+this is used for every platform now, but most of the time it is just looking at a directory
+Not sure what the "and truncates any..." part of the doc is referring to.
+Cool - it's fine if it looks weird, as long as it's valid :)
+This is the new check that these plugin frameworks haven't been `lipo`d to the iOS ARCHS.
+I would recommend pulling this logic into a new class that is separate from the create command. in general the use of string processing here is concerning to me. The pubspec.yaml is already structured data, you should take advantage of that to add the platforms.
+From other PR: using zipinfo rather than unzip could be an optimization (feel free to do it in a separate PR)
+Also what do you mean by "names" here? ```suggestion     help: 'Target device id (prefixes are allowed, names are not supported).\n' ```
+Renamed from other file since it only contained Android. Added test cases to prove that embedding version identification works
+Can we just reuse the same method channel implementation in the <plugin_name>.dart and this web class just listen to the channel message?
+I think scaleChange might be what we want here.  In _onScaleUpdate, it calls onInteractionUpdate with the direct `details.scale` value, which doesn't consider the current scale of the child.
+I think so, good idea
+Can you wrap a Scaffold around the transition?
+I think I added that part because the focus changes were increasing a build benchmark, and I was trying to reduce the number of built items for things that were disabled.
+good catch, done
+Thanks for pointing out, I have fixed it.

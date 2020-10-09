@@ -6259,7 +6259,3 @@ private?
 the class itself is private. I thought we don't usually make property private if it is already under a private class?
 If we would make this class public should this property be public?
 I see, yes, that should be private
-
-
-=============== REACHED API LIMIT AT PR 1792 =============== 2586 Pull Requests were analyzed
- There were 6320 comments
