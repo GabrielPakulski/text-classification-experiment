@@ -378,7 +378,7 @@ Shouldn't `AppLinkNavigation.APP_LINK_NAVIGATE_OUT_EVENT_NAME` and `AppLinks.APP
 Given how we are doing this in multiple places now it may make sense to create an interface to allow people to specify additional compression/decompression methods in a more generic way.  For example if someone wants to use bzip they would have to re-implement `NetworkEventReporterImpl` as well as the `RequestBodyHelper`. If we had a simple registry system from Content-Encoding to an interface that exposes a  compress and decompress function it would enable this. 
 optimized slightly 
 we usually use info("some log string {}", value); to avoid string concat when logging is disabled. 
-I should probably have asked this in the previous review, but why "addFollowingAccounts"? We don't talk about accounts mostly in other parts of the code. It could be ambiguous with the BIP32 feature of the same name. 
+I should probably have asked this in the previous review, but why "addFollowingAccounts"? We don't talk about accounts mostly in other parts of the code. It could be ambiguous with the BIP32 feature of the same name.
 I think equals is wrong here. I would recommend using `MediaTypes.typeEqual` to ignore the possible charset encoding or other possible parameters at the end of content type. 
 same comment as above 
 Couldn't this be: ```` uriVariables = bestPattern.matchAndExtract(lookupPath); ````
@@ -475,7 +475,13 @@ Would read better to remove the `is`.
 Please don't use wildcard imports 
 NIT: can this just be called `mPipeline`?
 same 
-What's up with this? 
+What's up with this?  catch cases at innerCollect where paused was set to false...
+I would rather to have 2 different methods `getSanitizedPath` and `getSanitizedParameters`.
+We should also then adjust this to cast to map and `get("commitMeta")`
+I would like this patch a lot better if it introduced a new attribute (say "filter-spec"; better names are welcome) and deprecated the old "filter" attribute, marking it as an alternative to "filter-spec". The "filter" attribute would not actually be stored in the model -- it would be synthetic, read from and written to the filter-spec attribute. This filterToModel method would be the basis of the read-attribute handler for the deprecated "filter" attribute -- pass in the filter-spec value stored in the model and get back the legacy "filter"  complex attribute value. A reverse method would need to be written for the add handler and for write-attribute -- take a complex attribute and store it in "filter-spec" as a string.   That would be a fully backward compatible solution, and since the old "filter" is properly deprecated we could drop it in AS 8.  I'm not suggesting supporting the old attribute in the xml. If people want that they can just use the old version of the xsd.
+static import
+May be able to just use this for all -- not sure why the parameter is used to begin with.
+Changing it this way
 remove `this`
 Maybe add that both are needed when returning this value to core. At least I was a bit confused by this. 
 This should be innerHTML and not src.   Since you've got the no-callback form special-cased, you should add tests for this case in mobile-spec. Maybe verify they work by using a follow-up call that does have a return value. 
@@ -484,13 +490,7 @@ Are you trying to achieve scheduling with fixed delay with this schedule-at-the-
 0 is not a power of 2. 
 Now it is :) 
 Maybe add a helper for this, since it is duplicated below 
-when replacing paused boolean with finished one here, afaik finished must be set at all catch cases at innerCollect where paused was set to false... 
-I would rather to have 2 different methods `getSanitizedPath` and `getSanitizedParameters`. 
-We should also then adjust this to cast to map and `get("commitMeta")` 
-I would like this patch a lot better if it introduced a new attribute (say "filter-spec"; better names are welcome) and deprecated the old "filter" attribute, marking it as an alternative to "filter-spec". The "filter" attribute would not actually be stored in the model -- it would be synthetic, read from and written to the filter-spec attribute. This filterToModel method would be the basis of the read-attribute handler for the deprecated "filter" attribute -- pass in the filter-spec value stored in the model and get back the legacy "filter"  complex attribute value. A reverse method would need to be written for the add handler and for write-attribute -- take a complex attribute and store it in "filter-spec" as a string.   That would be a fully backward compatible solution, and since the old "filter" is properly deprecated we could drop it in AS 8.  I'm not suggesting supporting the old attribute in the xml. If people want that they can just use the old version of the xsd. 
-static import 
-May be able to just use this for all -- not sure why the parameter is used to begin with. 
-Changing it this way will force two new object allocations for each message (and single messages are the norm). Could we refactor this so that we don't have to do those two allocations and simply change the `ProcessBufferProcessor#onEvent` to figure out whether to invoke the `MessageFilter` more than once? 
+when replacing paused boolean with finished one here, afaik finished must be set at allwill force two new object allocations for each message (and single messages are the norm). Could we refactor this so that we don't have to do those two allocations and simply change the `ProcessBufferProcessor#onEvent` to figure out whether to invoke the `MessageFilter` more than once?
 Rename to OAuth2AuthorizationRequestRedirectFilter
 why is this no longer a constructor? 
 Can we validate that there are no null values 
